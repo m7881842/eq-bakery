@@ -1,5 +1,4 @@
 from datetime import date
-import urllib.parse
 import streamlit as st
 
 # 1. 頁面基本設定
@@ -19,37 +18,36 @@ st.divider()
 # 3. 第一區塊：選擇商品與數量
 st.subheader("1. 選擇品項與數量")
 
-products = {
-    "莓果燕麥餅 ($250/盒)": {"name": "莓果燕麥餅", "price": 250},
-    "可可燕麥餅 ($280/盒)": {"name": "可可燕麥餅", "price": 280},
-    "奶油曲奇餅 ($220/包)": {
-        "name": "小奶油曲奇餅",
-        "price": 220,
-    },
-}
+# 使用陣列 + 獨一無二的 id，確保不會重複
+products = [
+    {"id": "item_1", "name": "莓果燕麥餅", "price": 250, "unit": "盒"},
+    {"id": "item_2", "name": "可可燕麥餅", "price": 280, "unit": "盒"},
+    {"id": "item_3", "name": "奶油曲奇餅", "price": 220, "unit": "包"},
+]
 
 selected_orders = []
 total_price = 0
 
-for label, info in products.items():
+for item in products:
     col1, col2 = st.columns([3, 1])
     with col1:
-        st.write(f"**{info['name']}**")
-        st.caption(f"NT$ {info['price']}")
+        st.write(f"**{item['name']}**")
+        st.caption(f"NT$ {item['price']} / {item['unit']}")
     with col2:
+        # 使用 item['id'] 作為 key，保證獨一無二
         qty = st.number_input(
             "數量",
             min_value=0,
             max_value=20,
             value=0,
             step=1,
-            key=info["name"],
+            key=f"qty_{item['id']}",
             label_visibility="collapsed",
         )
 
     if qty > 0:
-        item_total = qty * info["price"]
-        selected_orders.append(f"• {info['name']} x {qty} (${item_total})")
+        item_total = qty * item["price"]
+        selected_orders.append(f"• {item['name']} x {qty} (${item_total})")
         total_price += item_total
 
 st.write(f"### **預估總金額：NT$ {total_price}**")
