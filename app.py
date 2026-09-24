@@ -18,39 +18,84 @@ st.divider()
 # 3. 第一區塊：選擇商品與數量
 st.subheader("1. 選擇品項與數量")
 
-# 使用陣列 + 獨一無二的 id，確保不會重複
+# 定義商品資料結構（包含單片與罐裝兩種規格）
 products = [
-    {"id": "item_1", "name": "莓果燕麥餅", "price": 250, "unit": "盒"},
-    {"id": "item_2", "name": "可可燕麥餅", "price": 280, "unit": "盒"},
-    {"id": "item_3", "name": "奶油曲奇餅", "price": 220, "unit": "包"},
+    {
+        "id": "berry",
+        "name": "莓果燕麥餅",
+        "desc": "嚴選酸甜蔓越莓與香醇燕麥，口感豐富有層次。",
+        "image": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
+        "variants": [
+            {"id": "single", "label": "單片", "price": 35},
+            {"id": "jar", "label": "罐裝 (8片)", "price": 250},
+        ],
+    },
+    {
+        "id": "cocoa",
+        "name": "可可燕麥餅",
+        "desc": "濃郁苦甜可可搭配燕麥香氣，甜而不膩的經典風味。",
+        "image": "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=500&q=80",
+        "variants": [
+            {"id": "single", "label": "單片", "price": 40},
+            {"id": "jar", "label": "罐裝 (8片)", "price": 280},
+        ],
+    },
+    {
+        "id": "butter",
+        "name": "奶油曲奇餅",
+        "desc": "發酵奶油製作，香濃酥鬆，入口即化。",
+        "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&q=80",
+        "variants": [
+            {"id": "single", "label": "單片", "price": 30},
+            {"id": "jar", "label": "罐裝 (8片)", "price": 220},
+        ],
+    },
 ]
 
 selected_orders = []
 total_price = 0
 
-for item in products:
-    col1, col2 = st.columns([3, 1])
-    with col1:
-        st.write(f"**{item['name']}**")
-        st.caption(f"NT$ {item['price']} / {item['unit']}")
-    with col2:
-        # 使用 item['id'] 作為 key，保證獨一無二
-        qty = st.number_input(
-            "數量",
-            min_value=0,
-            max_value=20,
-            value=0,
-            step=1,
-            key=f"qty_{item['id']}",
-            label_visibility="collapsed",
-        )
+for prod in products:
+    # 上半部：商品圖片 + 品名介紹
+    col_img, col_info = st.columns([1, 2])
 
-    if qty > 0:
-        item_total = qty * item["price"]
-        selected_orders.append(f"• {item['name']} x {qty} (${item_total})")
-        total_price += item_total
+    with col_img:
+        st.image(prod["image"], use_container_width=True)
 
-st.write(f"### **預估總金額：NT$ {total_price}**")
+    with col_info:
+        st.markdown(f"### {prod['name']}")
+        st.caption(prod["desc"])
+
+    # 下半部：規格與數量選擇欄位
+    st.write("**選擇規格與數量：**")
+
+    # 動態產生與規格數量相同的欄位
+    cols = st.columns(len(prod["variants"]))
+
+    for idx, var in enumerate(prod["variants"]):
+        with cols[idx]:
+            st.write(f"**{var['label']}**")
+            st.write(f"NT$ {var['price']}")
+
+            # 獨一無二的 key，格式如：qty_berry_single、qty_berry_jar
+            qty = st.number_input(
+                "數量",
+                min_value=0,
+                max_value=20,
+                value=0,
+                step=1,
+                key=f"qty_{prod['id']}_{var['id']}",
+            )
+
+            if qty > 0:
+                item_total = qty * var["price"]
+                item_name = f"{prod['name']} ({var['label']})"
+                selected_orders.append(f"• {item_name} x {qty} (${item_total})")
+                total_price += item_total
+
+    st.markdown("---")
+
+st.markdown(f"### **預估總金額：NT$ {total_price}**")
 
 st.divider()
 
