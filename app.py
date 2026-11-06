@@ -8,6 +8,19 @@ st.set_page_config(
     layout="centered",
 )
 
+# 自訂背景顏色與風格 (CSS)
+st.markdown(
+    """
+    <style>
+    /* 整頁背景顏色：溫馨暖米奶油色 */
+    .stApp {
+        background-color: #FDFBF7;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 # 2. 標題與品牌介紹
 st.title("EQ微甜研究所 ❄️")
 st.caption("手作溫暖 · 濃郁Q彈不黏牙的精緻雪花酥")
@@ -18,21 +31,28 @@ st.divider()
 # 3. 第一區塊：選擇雪花酥口味與數量
 st.subheader("1. 選擇雪花酥口味與數量")
 
-# 雪花酥商品資料庫（使用你指定的檔名 no.JPG 與 coco.JPG）
+# 雪花酥商品資料庫（含原味、可可、芒果）
 products = [
     {
         "id": "original",
         "name": "原味雪花酥",
         "desc": "一包 150g（約 10-12塊）。濃郁奶香結合酥脆餅乾與酸甜蔓越莓，口感Q彈不黏牙。",
-        "price": 185,
-        "image": "no.jpg",
+        "price": 180,
+        "image": "no.JPG",
     },
     {
         "id": "cocoa",
         "name": "可可雪花酥",
         "desc": "一包 150g（約 10-12塊）。微苦香醇的苦甜可可風味，層次豐富、大人小孩都愛。",
         "price": 190,
-        "image": "Coco.jpg",
+        "image": "coco.JPG",
+    },
+    {
+        "id": "mango",
+        "name": "芒果雪花酥",
+        "desc": "一包 150g（約 10-12塊）。香甜芒果風味，帶有夏日清爽果香，口感Q彈不黏牙。",
+        "price": 190,
+        "image": "m.jpg",
     },
 ]
 
@@ -106,7 +126,7 @@ if st.button("🚀 產生訂單並前往 IG 私訊", type="primary", use_contain
             f"【取貨方式】：{delivery_method}\n"
             f"【訂購人】：{cust_name} ({cust_phone})"
             f"{note_str}\n\n"
-            f"請幫我確認是否有產能接單，謝謝！"
+            f"請問何時方便出貨，謝謝！"
         )
 
         st.success("✅ 訂單內容已順利產生！請點擊上方框內右側按鈕複製訊息：")
