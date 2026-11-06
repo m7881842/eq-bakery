@@ -38,14 +38,14 @@ products = [
         "name": "原味雪花酥",
         "desc": "一包 150g（約 10-12塊）。濃郁奶香結合酥脆餅乾與酸甜蔓越莓，口感Q彈不黏牙。",
         "price": 180,
-        "image": "no.JPG",
+        "image": "no.jpg",
     },
     {
         "id": "cocoa",
         "name": "可可雪花酥",
         "desc": "一包 150g（約 10-12塊）。微苦香醇的苦甜可可風味，層次豐富、大人小孩都愛。",
         "price": 190,
-        "image": "coco.JPG",
+        "image": "Coco.jpg",
     },
     {
         "id": "mango",
