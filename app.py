@@ -3,52 +3,36 @@ import streamlit as st
 
 # 1. 頁面基本設定
 st.set_page_config(
-    page_title="EQ微甜研究所 | 手作烘焙預訂",
-    page_icon="🧁",
+    page_title="EQ微甜研究所 | 手作雪花酥預訂",
+    page_icon="❄️",
     layout="centered",
 )
 
 # 2. 標題與品牌介紹
-st.title("EQ微甜研究所 🧁")
-st.caption("手作溫暖 · 微甜無負擔的精緻烘焙")
+st.title("EQ微甜研究所 ❄️")
+st.caption("手作溫暖 · 濃郁Q彈不黏牙的精緻雪花酥")
 st.info("💡 工作室為兩人手作生產、產能有限，請先填單私訊確認接單狀況！")
 
 st.divider()
 
-# 3. 第一區塊：選擇商品與數量
-st.subheader("1. 選擇品項與數量")
+# 3. 第一區塊：選擇雪花酥口味與數量
+st.subheader("1. 選擇雪花酥口味與數量")
 
-# 定義商品資料結構（包含單片與罐裝兩種規格）
+# 雪花酥商品資料庫（使用你指定的檔名 no.JPG 與 coco.JPG）
 products = [
     {
-        "id": "berry",
-        "name": "莓果燕麥餅",
-        "desc": "嚴選酸甜蔓越莓與香醇燕麥，口感豐富有層次。",
-        "image": "https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=500&q=80",
-        "variants": [
-            {"id": "single", "label": "單片", "price": 35},
-            {"id": "jar", "label": "罐裝 (8片)", "price": 250},
-        ],
+        "id": "original",
+        "name": "原味雪花酥",
+        "desc": "一包 150g（約 10-12塊）。濃郁奶香結合酥脆餅乾與酸甜蔓越莓，口感Q彈不黏牙。",
+        "price": 185,
+        "image": "no.JPG",
     },
     {
         "id": "cocoa",
-        "name": "可可燕麥餅",
-        "desc": "濃郁苦甜可可搭配燕麥香氣，甜而不膩的經典風味。",
-        "image": "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=500&q=80",
-        "variants": [
-            {"id": "single", "label": "單片", "price": 40},
-            {"id": "jar", "label": "罐裝 (8片)", "price": 280},
-        ],
-    },
-    {
-        "id": "butter",
-        "name": "奶油曲奇餅",
-        "desc": "發酵奶油製作，香濃酥鬆，入口即化。",
-        "image": "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500&q=80",
-        "variants": [
-            {"id": "single", "label": "單片", "price": 30},
-            {"id": "jar", "label": "罐裝 (8片)", "price": 220},
-        ],
+        "name": "可可雪花酥",
+        "desc": "一包 150g（約 10-12塊）。微苦香醇的苦甜可可風味，層次豐富、大人小孩都愛。",
+        "price": 190,
+        "image": "coco.JPG",
     },
 ]
 
@@ -56,7 +40,7 @@ selected_orders = []
 total_price = 0
 
 for prod in products:
-    # 上半部：商品圖片 + 品名介紹
+    # 左右欄位佈局：左邊放圖片，右邊放品名與數量選擇
     col_img, col_info = st.columns([1, 2])
 
     with col_img:
@@ -65,33 +49,23 @@ for prod in products:
     with col_info:
         st.markdown(f"### {prod['name']}")
         st.caption(prod["desc"])
+        st.write(f"**NT$ {prod['price']} / 包 (150g)**")
 
-    # 下半部：規格與數量選擇欄位
-    st.write("**選擇規格與數量：**")
+        # 數量選擇器 (key 絕對不重複)
+        qty = st.number_input(
+            "數量 (包)",
+            min_value=0,
+            max_value=20,
+            value=0,
+            step=1,
+            key=f"qty_{prod['id']}",
+        )
 
-    # 動態產生與規格數量相同的欄位
-    cols = st.columns(len(prod["variants"]))
-
-    for idx, var in enumerate(prod["variants"]):
-        with cols[idx]:
-            st.write(f"**{var['label']}**")
-            st.write(f"NT$ {var['price']}")
-
-            # 獨一無二的 key，格式如：qty_berry_single、qty_berry_jar
-            qty = st.number_input(
-                "數量",
-                min_value=0,
-                max_value=20,
-                value=0,
-                step=1,
-                key=f"qty_{prod['id']}_{var['id']}",
-            )
-
-            if qty > 0:
-                item_total = qty * var["price"]
-                item_name = f"{prod['name']} ({var['label']})"
-                selected_orders.append(f"• {item_name} x {qty} (${item_total})")
-                total_price += item_total
+        if qty > 0:
+            item_total = qty * prod["price"]
+            item_name = f"{prod['name']} (150g)"
+            selected_orders.append(f"• {item_name} x {qty}包 (${item_total})")
+            total_price += item_total
 
     st.markdown("---")
 
@@ -125,7 +99,7 @@ if st.button("🚀 產生訂單並前往 IG 私訊", type="primary", use_contain
         note_str = f"\n【備註】：{cust_note}" if cust_note else ""
 
         order_text = (
-            f"你好！我想預訂【EQ微甜研究所】手作點心：\n\n"
+            f"你好！我想預訂【EQ微甜研究所】手作雪花酥：\n\n"
             f"{items_str}\n\n"
             f"【預估總金額】：NT$ {total_price}\n"
             f"【預計取貨日】：{pickup_date}\n"
